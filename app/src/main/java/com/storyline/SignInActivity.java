@@ -37,6 +37,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -145,5 +147,12 @@ public class SignInActivity extends AppCompatActivity implements
                 Log.e(getClass().getSimpleName(), "onFailure: " + e.getMessage());
             }
         });
+    }
+
+
+    private void addNewUser(User user){
+        DatabaseReference mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference messagesRef = mFirebaseDatabaseReference.child("users");
+        messagesRef.push().setValue(user);
     }
 }
