@@ -14,7 +14,7 @@ public class MainStoriesActivity extends AppCompatActivity {
         replaceFragmentInActivity(new FriendsListFragment());
     }
 
-    private void replaceFragmentInActivity(Fragment fragment) {
+    public void replaceFragmentInActivity(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_container, fragment);
         transaction.commit();

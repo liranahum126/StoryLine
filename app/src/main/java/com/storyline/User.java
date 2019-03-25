@@ -7,6 +7,16 @@ public class User {
     String photoUrl;
 
 
+    public User() {
+    }
+
+    public User(String userId, String userEmail, String name, String photoUrl) {
+        this.userId = userId;
+        this.userEmail = userEmail;
+        this.name = name;
+        this.photoUrl = photoUrl;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -33,5 +43,9 @@ public class User {
 
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

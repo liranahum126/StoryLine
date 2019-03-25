@@ -22,6 +22,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,10 +41,12 @@ public class FriendsListFragment extends Fragment {
     private FirebaseRecyclerAdapter<User, UserViewHolder>
             mFirebaseAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private FirebaseAuth mFirebaseAuth;
+    public FirebaseUser mFirebaseUser;
   //  private ProgressBar mProgressBar;
 
 
-    public static class UserViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
         TextView messengerTextView;
@@ -54,6 +58,20 @@ public class FriendsListFragment extends Fragment {
             messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String userId = (String)itemView.getTag();
+                    ChatFragment chatFragment = new ChatFragment();
+
+                    if(userId.compareTo(FriendsListFragment.this.mFirebaseUser.getUid()) > 0){
+                        chatFragment.setMESSAGES_CHILD(userId + FriendsListFragment.this.mFirebaseUser.getUid());
+                    }else {
+                        chatFragment.setMESSAGES_CHILD(FriendsListFragment.this.mFirebaseUser.getUid() + userId);
+                    }
+                    ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
+                }
+            });
         }
     }
 
@@ -81,10 +99,11 @@ public class FriendsListFragment extends Fragment {
         SnapshotParser<User> parser = new SnapshotParser<User>() {
             @Override
             public User parseSnapshot(DataSnapshot dataSnapshot) {
+                Log.i("1111111111","111111111");
                 User user = dataSnapshot.getValue(User.class);
-                if (user != null) {
-                    user.setUserId(dataSnapshot.getKey());
-                }
+//                if (user != null) {
+//                    user.setUserId(dataSnapshot.getKey());
+//                }
                 return user;
             }
         };
@@ -97,6 +116,7 @@ public class FriendsListFragment extends Fragment {
         mFirebaseAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>(options) {
             @Override
             public UserViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                Log.i("222222222222","2222222222");
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new UserViewHolder(inflater.inflate(R.layout.item_message, viewGroup,
                         false));
@@ -107,6 +127,8 @@ public class FriendsListFragment extends Fragment {
                                             int position,
                                             User user) {
               //  mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                Log.i("333333333333333","33333333333333333333");
+                viewHolder.itemView.setTag(user.getUserId());
                 if (user.getName() != null) {
                     viewHolder.messageTextView.setText(user.getName());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
@@ -130,6 +152,7 @@ public class FriendsListFragment extends Fragment {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
+                Log.i("444444444444444","444444444444444444444444");
                 int friendlyMessageCount = mFirebaseAdapter.getItemCount();
                 int lastVisiblePosition =
                         mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -154,6 +177,33 @@ public class FriendsListFragment extends Fragment {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(mLinearLayoutManager);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in.
+        // TODO: Add code to check if user is signed in.
+    }
+
+    @Override
+    public void onPause() {
+        mFirebaseAdapter.stopListening();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mFirebaseAdapter.startListening();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 
 }

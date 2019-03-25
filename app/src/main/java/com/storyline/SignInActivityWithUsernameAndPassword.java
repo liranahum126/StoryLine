@@ -105,7 +105,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                addNewUser(new User(user.getUid(), user.getEmail(), user.getDisplayName(), ""));
+                                addNewUser(new User(user.getUid(), user.getEmail(), "aaaaa", ""));
                             }
 
                             onRegisterSucceed(user);
@@ -139,7 +139,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
     }
 
     private void onRegisterSucceed(FirebaseUser user) {
-        startActivity(new Intent(SignInActivityWithUsernameAndPassword.this, MainActivity.class));
+        startActivity(new Intent(SignInActivityWithUsernameAndPassword.this, MainStoriesActivity.class));
         finish();
     }
 
