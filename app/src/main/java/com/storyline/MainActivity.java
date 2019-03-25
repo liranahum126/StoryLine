@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignInActivity.class));
+            startActivity(new Intent(this, SignInActivityWithUsernameAndPassword.class));
             finish();
             return;
         } else {
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity
                 mFirebaseAuth.signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mUsername = ANONYMOUS;
-                startActivity(new Intent(this, SignInActivity.class));
+                startActivity(new Intent(this, SignInActivityWithUsernameAndPassword.class));
                 finish();
                 return true;
             default:

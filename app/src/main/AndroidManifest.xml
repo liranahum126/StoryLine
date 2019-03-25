@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.storyline.SignInActivity" />
+        <activity android:name="com.storyline.SignInActivityWithUsernameAndPassword" />
 
     </application>
 
