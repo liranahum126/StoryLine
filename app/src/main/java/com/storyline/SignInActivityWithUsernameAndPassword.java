@@ -32,6 +32,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.storyline.models.User;
 
 public class SignInActivityWithUsernameAndPassword extends AppCompatActivity implements View.OnClickListener {
 
@@ -96,10 +99,17 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+
                             FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                addNewUser(new User(user.getUid(), user.getEmail(), user.getDisplayName(), ""));
+                            }
+
                             onRegisterSucceed(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -140,5 +150,11 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
                 .setMessage(errorMessage)
                 .setNeutralButton(R.string.ok, null)
                 .show();
+    }
+
+    private void addNewUser(User user) {
+        DatabaseReference mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference messagesRef = mFireBaseDatabaseReference.child("users");
+        messagesRef.push().setValue(user);
     }
 }
