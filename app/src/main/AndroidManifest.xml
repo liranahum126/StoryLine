@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.storyline.SignInActivityWithUsernameAndPassword" />
+        <activity
+            android:name="com.storyline.SignInActivityWithUsernameAndPassword"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
