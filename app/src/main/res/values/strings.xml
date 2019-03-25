@@ -12,4 +12,11 @@
     <string name="fresh_config">Fresh Config</string>
     <string name="cause_crash">Cause Crash</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="register">Register</string>
+    <string name="please_fill_all_fields_in_order_to_register">Please fill all fields in order to register</string>
+    <string name="please_fill_all_fields_in_order_to_login">Please fill all fields in order to login</string>
+    <string name="ok">ok</string>
+    <string name="login">Login</string>
 </resources>
