@@ -23,7 +23,9 @@
             android:name=".SignInActivityWithUsernameAndPassword"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".ui.categories.TempActivity">
+        <activity android:name=".ui.categories.TempActivity"
+            android:theme="@style/Theme.Design.NoActionBar">
+">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

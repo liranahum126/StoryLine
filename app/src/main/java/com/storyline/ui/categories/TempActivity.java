@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.storyline.R;
 import com.storyline.ui.categories.model.Category;
+import com.storyline.ui.categories.providers.CategoriesProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +18,9 @@ public class TempActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temp);
 
-        List<String> categoryLines = new ArrayList<>();
-        categoryLines.add("adfadfa");
-        categoryLines.add("ngndndgndgndgndgn");
-        categoryLines.add("aaa");
-        categoryLines.add("bbbbb");
+        CategoriesFragment categoriesFragment = CategoriesFragment.newInstance(CategoriesProvider.getCategories());
 
-        Category category = new Category("some category name", 0, categoryLines);
-
-        CategoryFragment categoryFragment = CategoryFragment.newInstance(category);
-
-        openFragment(categoryFragment);
+        openFragment(categoriesFragment);
     }
 
     private void openFragment(Fragment fragment) {

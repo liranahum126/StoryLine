@@ -35,7 +35,7 @@ public class CategoryFragment extends Fragment {
 
     private ImageView categoryPictureImageView;
     private TextView categoryNameTextView;
-    private ViewPager categoryLivesViewPager;
+    private ViewPager categoryLinesViewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +50,8 @@ public class CategoryFragment extends Fragment {
 
         categoryPictureImageView = view.findViewById(R.id.category_picture_image_view);
         categoryNameTextView = view.findViewById(R.id.category_name_text_view);
-        categoryLivesViewPager = view.findViewById(R.id.category_line_view_pager);
+        categoryLinesViewPager = view.findViewById(R.id.category_line_view_pager);
+
 
         Category category = getCategoryFromBundle();
         if (category != null) {
@@ -70,7 +71,7 @@ public class CategoryFragment extends Fragment {
         }
 
         CategoryLineAdapter categoryLineAdapter = new CategoryLineAdapter(getActivity().getSupportFragmentManager() ,category.getCategoryLines());
-        categoryLivesViewPager.setAdapter(categoryLineAdapter);
+        categoryLinesViewPager.setAdapter(categoryLineAdapter);
     }
 
     @Nullable
