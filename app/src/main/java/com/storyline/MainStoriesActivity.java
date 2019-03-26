@@ -16,7 +16,7 @@ public class MainStoriesActivity extends AppCompatActivity {
 
     public void replaceFragmentInActivity(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_container, fragment);
+        transaction.replace(R.id.content_container, fragment).addToBackStack(fragment.getClass().getSimpleName());
         transaction.commit();
     }
 }

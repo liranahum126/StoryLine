@@ -1,10 +1,14 @@
 package com.storyline;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class User {
     String userId;
     String userEmail;
     String name;
     String photoUrl;
+    HashMap<String,InterActiveFriend> interActiveFriendList;
 
 
     public User() {
@@ -47,5 +51,13 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public HashMap<String,InterActiveFriend> getInterActiveFriendList() {
+        return interActiveFriendList;
+    }
+
+    public void setInterActiveFriendList(HashMap<String,InterActiveFriend> interActiveFriendList) {
+        this.interActiveFriendList = interActiveFriendList;
     }
 }

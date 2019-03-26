@@ -154,7 +154,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
 
     private void addNewUser(User user) {
         DatabaseReference mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference messagesRef = mFireBaseDatabaseReference.child("users");
-        messagesRef.push().setValue(user);
+        DatabaseReference messagesRef = mFireBaseDatabaseReference.child("users").child(user.getUserId());
+        messagesRef.setValue(user);
     }
 }
