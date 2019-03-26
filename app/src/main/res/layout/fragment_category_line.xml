@@ -9,10 +9,12 @@
         android:id="@+id/category_line_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:ellipsize="end"
+        android:gravity="center|start"
         android:lines="2"
-        android:text="@string/hello_blank_fragment"
+        android:maxLines="2"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:text="gadgadgadgadgadg\nadgadgadgadgadgadgadgadgadgvadvadvadvadvadvadvadvadv" />
 
 </FrameLayout>

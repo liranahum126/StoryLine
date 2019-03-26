@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import com.storyline.R;
 import com.storyline.ui.categories.adapter.CategoryLineAdapter;
+import com.storyline.ui.categories.customs.WrapContentViewPager;
 import com.storyline.ui.categories.model.Category;
 
 /**
@@ -36,7 +36,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
 
     private ImageView categoryPictureImageView;
     private TextView categoryNameTextView;
-    private ViewPager categoryLinesViewPager;
+    private WrapContentViewPager categoryLinesViewPager;
     private ImageButton forwardButton;
     private ImageButton backwardButton;
 

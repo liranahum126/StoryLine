@@ -39,15 +39,16 @@
         app:layout_constraintStart_toEndOf="@+id/arrow_forward_image_button"
         tools:text="Adventures" />
 
-    <android.support.v4.view.ViewPager
+    <com.storyline.ui.categories.customs.WrapContentViewPager
         android:id="@+id/category_line_view_pager"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="42dp"
-        android:background="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/arrow_backward_image_button"
-        app:layout_constraintStart_toEndOf="@+id/arrow_forward_image_button"/>
+        app:layout_constraintStart_toEndOf="@+id/arrow_forward_image_button"
+        tools:background="@color/colorAccent"
+        tools:layout_height="100dp" />
 
     <ImageButton
         android:id="@+id/arrow_forward_image_button"
