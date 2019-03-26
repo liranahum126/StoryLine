@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import com.storyline.ui.categories.model.Category;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements View.OnClickListener {
 
     private static String CATEGORY_OBJECT = "CATEGORY_OBJECT";
 
@@ -36,6 +37,8 @@ public class CategoryFragment extends Fragment {
     private ImageView categoryPictureImageView;
     private TextView categoryNameTextView;
     private ViewPager categoryLinesViewPager;
+    private ImageButton forwardButton;
+    private ImageButton backwardButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,10 +51,14 @@ public class CategoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        forwardButton = view.findViewById(R.id.arrow_forward_image_button);
+        backwardButton = view.findViewById(R.id.arrow_backward_image_button);
         categoryPictureImageView = view.findViewById(R.id.category_picture_image_view);
         categoryNameTextView = view.findViewById(R.id.category_name_text_view);
         categoryLinesViewPager = view.findViewById(R.id.category_line_view_pager);
 
+        forwardButton.setOnClickListener(this);
+        backwardButton.setOnClickListener(this);
 
         Category category = getCategoryFromBundle();
         if (category != null) {
@@ -82,4 +89,16 @@ public class CategoryFragment extends Fragment {
         return bundle.getParcelable(CATEGORY_OBJECT);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.arrow_forward_image_button:
+                categoryLinesViewPager.setCurrentItem(categoryLinesViewPager.getCurrentItem() - 1, true);
+                break;
+
+            case R.id.arrow_backward_image_button:
+                categoryLinesViewPager.setCurrentItem(categoryLinesViewPager.getCurrentItem() + 1, true);
+                break;
+        }
+    }
 }
