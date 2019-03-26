@@ -77,7 +77,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
             categoryNameTextView.setText(category.getCategoryName());
         }
 
-        CategoryLineAdapter categoryLineAdapter = new CategoryLineAdapter(getActivity().getSupportFragmentManager() ,category.getCategoryLines());
+        CategoryLineAdapter categoryLineAdapter = new CategoryLineAdapter(getChildFragmentManager() ,category.getCategoryLines());
         categoryLinesViewPager.setAdapter(categoryLineAdapter);
     }
 

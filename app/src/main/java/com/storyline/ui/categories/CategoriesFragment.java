@@ -52,7 +52,7 @@ public class CategoriesFragment extends Fragment {
 
         initPagerSettings(categoriesViewPager);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity().getSupportFragmentManager(), getCategoriesFromBundle());
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getChildFragmentManager(), getCategoriesFromBundle());
         categoriesViewPager.setAdapter(categoryAdapter);
     }
 
