@@ -1,4 +1,4 @@
-package com.storyline.ui.categories;
+package com.storyline.ui.categories.views;
 
 
 import android.os.Bundle;

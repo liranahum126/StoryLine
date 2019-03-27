@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.categories.CategoryLineFragment">
+    tools:context=".ui.categories.views.CategoryLineFragment">
 
     <TextView
         android:id="@+id/category_line_text_view"

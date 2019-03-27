@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.storyline.ui.categories.CategoryLineFragment;
+import com.storyline.ui.categories.views.CategoryLineFragment;
 
 import java.util.List;
 

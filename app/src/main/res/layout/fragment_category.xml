@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.categories.CategoryFragment">
+    tools:context=".ui.categories.views.CategoryFragment">
 
     <ImageView
         android:id="@+id/category_picture_image_view"

@@ -1,4 +1,4 @@
-package com.storyline.ui.categories;
+package com.storyline.ui.categories.views;
 
 
 import android.content.res.Resources;
@@ -11,9 +11,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.storyline.R;
 import com.storyline.ui.categories.adapter.CategoryAdapter;
+import com.storyline.ui.categories.listeners.StartStoryListener;
 import com.storyline.ui.categories.model.Category;
 
 import java.util.ArrayList;
@@ -23,11 +25,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements View.OnClickListener {
 
     private static final String CATEGORY_LIST = "CATEGORY_LIST";
 
     private ViewPager categoriesViewPager;
+    private StartStoryListener startStoryListener;
+    private Button startStoryButton;
+
+    private CategoryAdapter categoryAdapter;
 
     public static CategoriesFragment newInstance(ArrayList<Category> categories) {
         Bundle args = new Bundle();
@@ -49,10 +55,13 @@ public class CategoriesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         categoriesViewPager = view.findViewById(R.id.categories_view_pager);
+        startStoryButton = view.findViewById(R.id.start_story_button);
+
+        startStoryButton.setOnClickListener(this);
 
         initPagerSettings(categoriesViewPager);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getChildFragmentManager(), getCategoriesFromBundle());
+        categoryAdapter = new CategoryAdapter(getChildFragmentManager(), getCategoriesFromBundle());
         categoriesViewPager.setAdapter(categoryAdapter);
     }
 
@@ -77,5 +86,26 @@ public class CategoriesFragment extends Fragment {
 
     private int dp2px(Resources resource, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resource.getDisplayMetrics());
+    }
+
+    public void setOnStartStoryListener(StartStoryListener startStoryListener) {
+        this.startStoryListener = startStoryListener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.start_story_button:
+                if (startStoryListener != null) {
+                    Category category = getCategoriesFromBundle().get(categoriesViewPager.getCurrentItem());
+                    Fragment fragment = categoryAdapter.getItem(categoriesViewPager.getCurrentItem());
+                    if (fragment instanceof CategoryFragment) {
+                        CategoryFragment categoryFragment = (CategoryFragment) fragment;
+                        String categoryLine = categoryFragment.getChosenCategoryLine();
+                        startStoryListener.onStartStoryClicked(category, categoryLine);
+                    }
+                }
+                break;
+        }
     }
 }

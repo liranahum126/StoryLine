@@ -1,4 +1,4 @@
-package com.storyline.ui.categories;
+package com.storyline.ui.categories.views;
 
 
 import android.os.Bundle;
@@ -39,6 +39,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     private WrapContentViewPager categoryLinesViewPager;
     private ImageButton forwardButton;
     private ImageButton backwardButton;
+    private CategoryLineAdapter categoryLineAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +78,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
             categoryNameTextView.setText(category.getCategoryName());
         }
 
-        CategoryLineAdapter categoryLineAdapter = new CategoryLineAdapter(getChildFragmentManager() ,category.getCategoryLines());
+        categoryLineAdapter = new CategoryLineAdapter(getChildFragmentManager() ,category.getCategoryLines());
         categoryLinesViewPager.setAdapter(categoryLineAdapter);
     }
 
@@ -100,5 +101,9 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
                 categoryLinesViewPager.setCurrentItem(categoryLinesViewPager.getCurrentItem() + 1, true);
                 break;
         }
+    }
+
+    public String getChosenCategoryLine() {
+        return getCategoryFromBundle().getCategoryLines().get(categoryLinesViewPager.getCurrentItem());
     }
 }
