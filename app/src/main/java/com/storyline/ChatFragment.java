@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.storyline.ui.categories.model.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,11 @@ public class ChatFragment extends Fragment {
 
     private String openingSentance;
     private String friendUserId;
+    private Category category;
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public void setOpeningSentance(String openingSentance) {
         this.openingSentance = openingSentance;
@@ -327,7 +333,7 @@ public class ChatFragment extends Fragment {
                 updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId,false));
 
                 mMessageEditText.setText("");
-                getActivity().onBackPressed();
+                ((MainStoriesActivity)getActivity()).moveToFriendsListFragment();
             }
         });
     }

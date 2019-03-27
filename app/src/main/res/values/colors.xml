@@ -9,4 +9,5 @@
     <color name="bright_black">#3c3c3c</color>
     <color name="pink">#f00a6b</color>
     <color name="white">#ffffff</color>
+    <color name="transparent">#00000000</color>
 </resources>

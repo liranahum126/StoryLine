@@ -19,4 +19,8 @@ public class MainStoriesActivity extends AppCompatActivity {
         transaction.replace(R.id.content_container, fragment).addToBackStack(fragment.getClass().getSimpleName());
         transaction.commit();
     }
+
+    public void moveToFriendsListFragment(){
+        replaceFragmentInActivity(new FriendsListFragment());
+    }
 }

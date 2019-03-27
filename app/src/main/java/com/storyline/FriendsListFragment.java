@@ -26,6 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.storyline.ui.categories.listeners.StartStoryListener;
+import com.storyline.ui.categories.model.Category;
+import com.storyline.ui.categories.providers.CategoriesProvider;
+import com.storyline.ui.categories.views.CategoriesFragment;
 
 import java.util.HashMap;
 
@@ -76,9 +80,20 @@ public class FriendsListFragment extends Fragment {
                             ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
                         }
                     }else {
-                        TempCategoryFragment tempCategoryFragment = new TempCategoryFragment();
-                        tempCategoryFragment.setFriendId(friendUser.userId);
-                        ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(tempCategoryFragment);
+//                        TempCategoryFragment tempCategoryFragment = new TempCategoryFragment();
+////                        tempCategoryFragment.setFriendId(friendUser.userId);
+
+                        CategoriesFragment categoriesFragment = CategoriesFragment.newInstance(CategoriesProvider.getCategories());
+                        categoriesFragment.setFriendId(friendUser.userId);
+                        categoriesFragment.setOnStartStoryListener(new StartStoryListener() {
+                            @Override
+                            public void onStartStoryClicked(Category category, String line) {
+                                Log.e(getClass().getSimpleName(), "onStartStoryClicked: category name: " + category.getCategoryName());
+                                Log.e(getClass().getSimpleName(), "onStartStoryClicked: category line: " + line);
+                            }
+                        });
+
+                        ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(categoriesFragment);
                     }
 
                 }
@@ -112,7 +127,7 @@ public class FriendsListFragment extends Fragment {
 
     private void changeMyTurnColor(View view){
         view.setEnabled(true);
-        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorTitle));
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white));
     }
 
     private void getUsers(){

@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.storyline.ChatFragment;
+import com.storyline.MainStoriesActivity;
 import com.storyline.R;
 import com.storyline.ui.categories.adapter.CategoryAdapter;
 import com.storyline.ui.categories.listeners.StartStoryListener;
@@ -34,6 +38,12 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private Button startStoryButton;
 
     private CategoryAdapter categoryAdapter;
+    String friendId;
+    private FirebaseAuth mFirebaseAuth;
+    public FirebaseUser mFirebaseUser;
+    public void setFriendId(String friendId) {
+        this.friendId = friendId;
+    }
 
     public static CategoriesFragment newInstance(ArrayList<Category> categories) {
         Bundle args = new Bundle();
@@ -53,7 +63,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
         categoriesViewPager = view.findViewById(R.id.categories_view_pager);
         startStoryButton = view.findViewById(R.id.start_story_button);
 
@@ -103,6 +114,20 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                         CategoryFragment categoryFragment = (CategoryFragment) fragment;
                         String categoryLine = categoryFragment.getChosenCategoryLine();
                         startStoryListener.onStartStoryClicked(category, categoryLine);
+
+                        /////////////////////////////
+                        ChatFragment chatFragment = new ChatFragment();
+                        chatFragment.setOpeningSentance(categoryLine);
+                        chatFragment.setCategory(category);
+                        if(friendId.compareTo(mFirebaseUser.getUid()) > 0){
+                            chatFragment.setMESSAGES_CHILD(friendId + mFirebaseUser.getUid());
+                        }else {
+                            chatFragment.setMESSAGES_CHILD(mFirebaseUser.getUid() + friendId);
+                        }
+                        ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
+
+
+                       //////////////////////////////
                     }
                 }
                 break;
