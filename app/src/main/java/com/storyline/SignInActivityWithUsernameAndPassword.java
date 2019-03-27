@@ -45,6 +45,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
     private Button mLoginButton;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private EditText nicknameEditText;
 
     // Firebase instance variables
     private FirebaseAuth mAuth;
@@ -56,6 +57,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
 
         emailEditText = findViewById(R.id.email_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
+        nicknameEditText = findViewById(R.id.nickname_edit_text);
         mLoginButton = findViewById(R.id.login_button);
         mRegisterButton = findViewById(R.id.register_button);
 
@@ -105,7 +107,7 @@ public class SignInActivityWithUsernameAndPassword extends AppCompatActivity imp
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                addNewUser(new User(user.getUid(), user.getEmail(), "aaaaa", ""));
+                                addNewUser(new User(user.getUid(), user.getEmail(), nicknameEditText.getText().toString(), ""));
                             }
 
                             onRegisterSucceed(user);
