@@ -254,12 +254,12 @@ public class ChatFragment extends Fragment {
         });
 
         mSendButton = (Button) view.findViewById(R.id.sendButton);
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Send messages on click.
-            }
-        });
+//        mSendButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Send messages on click.
+//            }
+//        });
 
         mAddMessageImageView = (ImageView) view.findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
@@ -310,6 +310,7 @@ public class ChatFragment extends Fragment {
                     friendlyMessageOpening.setId(friendUserId);
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD)
                             .push().setValue(friendlyMessageOpening);
+                    openingSentance = "";
                 }
 
 
@@ -326,6 +327,7 @@ public class ChatFragment extends Fragment {
                 updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId,false));
 
                 mMessageEditText.setText("");
+                getActivity().onBackPressed();
             }
         });
     }

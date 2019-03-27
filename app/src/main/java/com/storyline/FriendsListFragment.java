@@ -18,11 +18,16 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,6 +40,8 @@ public class FriendsListFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     public FirebaseUser mFirebaseUser;
   //  private ProgressBar mProgressBar;
+
+    private User myInnerTableUser;
 
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
@@ -52,10 +59,28 @@ public class FriendsListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String userId = (String)itemView.getTag();
-                    TempCategoryFragment tempCategoryFragment = new TempCategoryFragment();
-                    tempCategoryFragment.setFriendId(userId);
-                    ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(tempCategoryFragment);
+                    User friendUser = (User)itemView.getTag();
+
+                    HashMap<String,InterActiveFriend> interActiveFriendHashMap =  friendUser.getInterActiveFriendList();
+
+                    if(interActiveFriendHashMap != null) {
+                        InterActiveFriend interActiveFriend = interActiveFriendHashMap.get(mFirebaseUser.getUid());
+                        if (interActiveFriend != null) {
+                            ChatFragment chatFragment = new ChatFragment();
+
+                            if(friendUser.userId.compareTo(mFirebaseUser.getUid()) > 0){
+                                chatFragment.setMESSAGES_CHILD(friendUser.userId + mFirebaseUser.getUid());
+                            }else {
+                                chatFragment.setMESSAGES_CHILD(mFirebaseUser.getUid() + friendUser.userId);
+                            }
+                            ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
+                        }
+                    }else {
+                        TempCategoryFragment tempCategoryFragment = new TempCategoryFragment();
+                        tempCategoryFragment.setFriendId(friendUser.userId);
+                        ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(tempCategoryFragment);
+                    }
+
                 }
             });
         }
@@ -79,6 +104,17 @@ public class FriendsListFragment extends Fragment {
 
     }
 
+
+    private void changeFriendTurnColor(View view){
+        view.setEnabled(false);
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorAccent));
+    }
+
+    private void changeMyTurnColor(View view){
+        view.setEnabled(true);
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorTitle));
+    }
+
     private void getUsers(){
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -94,11 +130,14 @@ public class FriendsListFragment extends Fragment {
             }
         };
 
+
         DatabaseReference messagesRef = mFirebaseDatabaseReference.child("users");
+
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(messagesRef, parser)
                         .build();
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<User, UserViewHolder>(options) {
             @Override
             public UserViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -112,25 +151,52 @@ public class FriendsListFragment extends Fragment {
             protected void onBindViewHolder(final UserViewHolder viewHolder,
                                             int position,
                                             User user) {
-              //  mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                Log.i("333333333333333","33333333333333333333");
-                viewHolder.itemView.setTag(user.getUserId());
-                if (user.getName() != null) {
-                    viewHolder.messageTextView.setText(user.getName());
-                    viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                    viewHolder.messageImageView.setVisibility(ImageView.GONE);
-                }
+                if (!user.getUserId().equals(mFirebaseUser.getUid())) {
+                    viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.WRAP_CONTENT));
+                    HashMap<String, InterActiveFriend> interActiveFriendHashMap = user.getInterActiveFriendList();
 
-                viewHolder.messengerTextView.setText(user.getUserEmail());
-                if (user.getPhotoUrl() == null) {
-                    viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                            R.drawable.ic_account_circle_black_36dp));
-                } else {
-                    Glide.with(getActivity())
-                            .load(user.getPhotoUrl())
-                            .into(viewHolder.messengerImageView);
-                }
+                    if (interActiveFriendHashMap != null) {
+                        InterActiveFriend interActiveFriend = interActiveFriendHashMap.get(mFirebaseUser.getUid());
+                        if (interActiveFriend != null) {
+                            boolean isMyTurn = interActiveFriend.isMyTurn();
+                            if (!isMyTurn) {
+                                viewHolder.messengerTextView.setText("myTurn");
+                                changeMyTurnColor(viewHolder.itemView);
+                            } else {
+                                viewHolder.messengerTextView.setText("friend turn");
+                                changeFriendTurnColor(viewHolder.itemView);
+                            }
+                        } else {
+                            viewHolder.messengerTextView.setText("start game");
+                            changeMyTurnColor(viewHolder.itemView);
+                        }
+                    } else {
+                        viewHolder.messengerTextView.setText("start game");
+                        changeMyTurnColor(viewHolder.itemView);
+                    }
 
+                    //  mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    viewHolder.itemView.setTag(user);
+                    if (user.getName() != null) {
+                        viewHolder.messageTextView.setText(user.getUserEmail());
+                        viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
+                        viewHolder.messageImageView.setVisibility(ImageView.GONE);
+                    }
+
+                    // viewHolder.messengerTextView.setText(user.getUserEmail());
+                    if (user.getPhotoUrl() == null) {
+                        viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.ic_account_circle_black_36dp));
+                    } else {
+                        Glide.with(getActivity())
+                                .load(user.getPhotoUrl())
+                                .into(viewHolder.messengerImageView);
+                    }
+
+                }else{
+                    myInnerTableUser = user;
+                    viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,0));
+                }
             }
         };
 
@@ -153,7 +219,25 @@ public class FriendsListFragment extends Fragment {
             }
         });
 
+
+        listenToMyInteractiveList();
+
         recyclerView.setAdapter(mFirebaseAdapter);
+    }
+
+
+    private void listenToMyInteractiveList(){
+        mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child("interActiveFriendList").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mFirebaseAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
