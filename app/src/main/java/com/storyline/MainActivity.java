@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
+//        mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
