@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bright_blue"
@@ -31,21 +32,17 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:background="@drawable/progress_bar_background"
+        style="@style/ProgressBarCustom"
         android:layout_width="0dp"
         android:layout_height="10dp"
-        android:scaleY="5"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="16dp"
         android:max="100"
-        android:indeterminateOnly="false"
-        android:maxHeight="20dp"
-        android:minHeight="20dp"
-        android:progress="35"
+        android:progress="50"
+        android:progressDrawable="@drawable/progress_bar_background"
+        android:scaleY="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lines_to_go_text_view" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/story_background_image_view"
@@ -92,32 +89,42 @@
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             tools:text="Once upon a time there was a purple shy dino…   " />
 
+        <ImageButton
+            android:id="@+id/send_image_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/storyline_btn_send"
+            android:src="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/chat_edit_text"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <EditText
             android:id="@+id/chat_edit_text"
             android:layout_width="0dp"
             android:layout_height="92dp"
-            android:textSize="20sp"
-            android:padding="10dp"
-            android:textColorHint="@color/bright_grey"
             android:background="@drawable/chat_round_corners_stroke_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="adadadf"
             android:gravity="start|top"
-            android:textColor="@color/bright_black"/>
+            android:padding="10dp"
+            tools:text="some text"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/bright_black"
+            android:textColorHint="@color/bright_grey"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_image_button"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/chars_limit_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="60"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="2dp"
+            android:text="60"
+            android:layout_marginEnd="13dp"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/chat_edit_text" />
 
     </android.support.constraint.ConstraintLayout>
 
