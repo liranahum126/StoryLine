@@ -1,5 +1,6 @@
 package com.storyline;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,19 +48,33 @@ public class FriendsListFragment extends Fragment {
 
     private User myInnerTableUser;
 
-
     public class UserViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
         TextView messengerTextView;
-        CircleImageView messengerImageView;
+        ImageView messengerImageView;
+
+
+        public  void moveToCategoryFragment(User friendUser){
+            CategoriesFragment categoriesFragment = CategoriesFragment.newInstance(CategoriesProvider.getCategories());
+            categoriesFragment.setFriendId(friendUser.userId);
+            categoriesFragment.setOnStartStoryListener(new StartStoryListener() {
+                @Override
+                public void onStartStoryClicked(Category category, String line) {
+                    Log.e(getClass().getSimpleName(), "onStartStoryClicked: category name: " + category.getCategoryName());
+                    Log.e(getClass().getSimpleName(), "onStartStoryClicked: category line: " + line);
+                }
+            });
+
+            ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(categoriesFragment);
+        }
 
         public UserViewHolder(View v) {
             super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
-            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+            messageTextView = (TextView) itemView.findViewById(R.id.user_name_text_view);
+            messageImageView = (ImageView) itemView.findViewById(R.id.user_icon);
+            messengerTextView = (TextView) itemView.findViewById(R.id.story_status_text_view);
+            messengerImageView = (ImageView) itemView.findViewById(R.id.story_status_icon_image_view);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,22 +93,11 @@ public class FriendsListFragment extends Fragment {
                                 chatFragment.setMESSAGES_CHILD(mFirebaseUser.getUid() + friendUser.userId);
                             }
                             ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
+                        }else{
+                            moveToCategoryFragment(friendUser);
                         }
                     }else {
-//                        TempCategoryFragment tempCategoryFragment = new TempCategoryFragment();
-////                        tempCategoryFragment.setFriendId(friendUser.userId);
-
-                        CategoriesFragment categoriesFragment = CategoriesFragment.newInstance(CategoriesProvider.getCategories());
-                        categoriesFragment.setFriendId(friendUser.userId);
-                        categoriesFragment.setOnStartStoryListener(new StartStoryListener() {
-                            @Override
-                            public void onStartStoryClicked(Category category, String line) {
-                                Log.e(getClass().getSimpleName(), "onStartStoryClicked: category name: " + category.getCategoryName());
-                                Log.e(getClass().getSimpleName(), "onStartStoryClicked: category line: " + line);
-                            }
-                        });
-
-                        ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(categoriesFragment);
+                        moveToCategoryFragment(friendUser);
                     }
 
                 }
@@ -122,12 +126,12 @@ public class FriendsListFragment extends Fragment {
 
     private void changeFriendTurnColor(View view){
         view.setEnabled(false);
-        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorAccent));
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white));
     }
 
     private void changeMyTurnColor(View view){
         view.setEnabled(true);
-        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white));
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.bright_blue));
     }
 
     private void getUsers(){
@@ -158,7 +162,7 @@ public class FriendsListFragment extends Fragment {
             public UserViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 Log.i("222222222222","2222222222");
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new UserViewHolder(inflater.inflate(R.layout.item_message, viewGroup,
+                return new UserViewHolder(inflater.inflate(R.layout.item_user, viewGroup,
                         false));
             }
 
@@ -167,7 +171,7 @@ public class FriendsListFragment extends Fragment {
                                             int position,
                                             User user) {
                 if (!user.getUserId().equals(mFirebaseUser.getUid())) {
-                    viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.WRAP_CONTENT));
+                    viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,(int)dpTopixel(getActivity(),100)));
                     HashMap<String, InterActiveFriend> interActiveFriendHashMap = user.getInterActiveFriendList();
 
                     if (interActiveFriendHashMap != null) {
@@ -176,17 +180,22 @@ public class FriendsListFragment extends Fragment {
                             boolean isMyTurn = interActiveFriend.isMyTurn();
                             if (!isMyTurn) {
                                 viewHolder.messengerTextView.setText("myTurn");
+                                viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_edit);
                                 changeMyTurnColor(viewHolder.itemView);
                             } else {
                                 viewHolder.messengerTextView.setText("friend turn");
+                                viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_edit);
                                 changeFriendTurnColor(viewHolder.itemView);
                             }
                         } else {
                             viewHolder.messengerTextView.setText("start game");
+                            viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_play);
+
                             changeMyTurnColor(viewHolder.itemView);
                         }
                     } else {
                         viewHolder.messengerTextView.setText("start game");
+                        viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_play);
                         changeMyTurnColor(viewHolder.itemView);
                     }
 
@@ -195,17 +204,17 @@ public class FriendsListFragment extends Fragment {
                     if (user.getName() != null) {
                         viewHolder.messageTextView.setText(user.getUserEmail());
                         viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                        viewHolder.messageImageView.setVisibility(ImageView.GONE);
+                        viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
                     }
 
                     // viewHolder.messengerTextView.setText(user.getUserEmail());
                     if (user.getPhotoUrl() == null) {
-                        viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.ic_account_circle_black_36dp));
+//                        viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+//                                R.drawable.ic_account_circle_black_36dp));
                     } else {
-                        Glide.with(getActivity())
-                                .load(user.getPhotoUrl())
-                                .into(viewHolder.messengerImageView);
+//                        Glide.with(getActivity())
+//                                .load(user.getPhotoUrl())
+//                                .into(viewHolder.messengerImageView);
                     }
 
                 }else{
@@ -290,5 +299,10 @@ public class FriendsListFragment extends Fragment {
         super.onDestroy();
     }
 
+    public static float dpTopixel(Context c, float dp) {
+        float density = c.getResources().getDisplayMetrics().density;
+        float pixel = dp * density;
+        return pixel;
+    }
 
 }
