@@ -22,7 +22,7 @@ public class TempActivity extends AppCompatActivity {
             }
         });*/
 
-        ChatFragment chatFragment = ChatFragment.newInstance();
+        ChatFragment chatFragment = ChatFragment.newInstance("Some first line", "lastWord");
 
         openFragment(chatFragment);
     }

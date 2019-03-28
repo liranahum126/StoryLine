@@ -6,9 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.storyline.R;
@@ -18,12 +22,20 @@ import com.storyline.R;
  */
 public class ChatFragment extends Fragment {
 
-    private ProgressBar progressBar;
+    private static final String FIRST_LINE_BUNDLE = "FIRST_LINE_BUNDLE";
+    private static final String LAST_WORD_BUNDLE = "LAST_WORD_BUNDLE";
 
-    public static ChatFragment newInstance() {
+    private ProgressBar progressBar;
+    private EditText chatEditText;
+
+    private String firstLine;
+    private String lastWord;
+
+    public static ChatFragment newInstance(String firstLine, String lastWord) {
 
         Bundle args = new Bundle();
-
+        args.putString(FIRST_LINE_BUNDLE, firstLine);
+        args.putString(LAST_WORD_BUNDLE, lastWord);
         ChatFragment fragment = new ChatFragment();
         fragment.setArguments(args);
         return fragment;
@@ -42,9 +54,19 @@ public class ChatFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         progressBar = view.findViewById(R.id.progress_bar);
+        chatEditText = view.findViewById(R.id.chat_edit_text);
 
-//
-//        progressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_bar_background));
-//        progressBar.setIndeterminateDrawableTiled(ContextCompat.getDrawable(getContext(), R.color.white_with_opacity));
+        firstLine = getFromBunndle(FIRST_LINE_BUNDLE);
+        lastWord = getFromBunndle(LAST_WORD_BUNDLE);
+
+        chatEditText.setText(lastWord);
+    }
+
+    @Nullable
+    private String getFromBunndle(String key) {
+        Bundle bundle = getArguments();
+        if (bundle == null) return null;
+
+        return bundle.getString(key);
     }
 }
