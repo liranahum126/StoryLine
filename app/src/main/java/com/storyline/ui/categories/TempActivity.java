@@ -1,15 +1,9 @@
 package com.storyline.ui.categories;
 
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 
 import com.storyline.R;
-import com.storyline.ui.categories.listeners.StartStoryListener;
-import com.storyline.ui.categories.model.Category;
-import com.storyline.ui.categories.providers.CategoriesProvider;
-import com.storyline.ui.categories.views.CategoriesFragment;
 import com.storyline.ui.chat.ChatFragment;
 
 public class TempActivity extends AppCompatActivity {

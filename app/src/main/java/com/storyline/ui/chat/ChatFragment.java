@@ -41,9 +41,10 @@ public class ChatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        progressBar = view.findViewById(R.id.progress);
+        progressBar = view.findViewById(R.id.progress_bar);
 
-        progressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_bar_background));
+//
+//        progressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_bar_background));
 //        progressBar.setIndeterminateDrawableTiled(ContextCompat.getDrawable(getContext(), R.color.white_with_opacity));
     }
 }
