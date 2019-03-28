@@ -79,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/first_line_"
+            android:id="@+id/first_line_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -96,13 +96,15 @@
             android:id="@+id/chat_edit_text"
             android:layout_width="0dp"
             android:layout_height="92dp"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:textColorHint="@color/bright_grey"
             android:background="@drawable/chat_round_corners_stroke_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="adadadf"
             android:gravity="start|top"
-
             android:textColor="@color/bright_black"/>
 
         <TextView

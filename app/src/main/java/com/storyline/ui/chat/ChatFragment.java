@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.storyline.R;
 
@@ -27,6 +28,7 @@ public class ChatFragment extends Fragment {
 
     private ProgressBar progressBar;
     private EditText chatEditText;
+    private TextView firstLineTextView;
 
     private String firstLine;
     private String lastWord;
@@ -55,11 +57,13 @@ public class ChatFragment extends Fragment {
 
         progressBar = view.findViewById(R.id.progress_bar);
         chatEditText = view.findViewById(R.id.chat_edit_text);
+        firstLineTextView = view.findViewById(R.id.first_line_text_view);
 
         firstLine = getFromBunndle(FIRST_LINE_BUNDLE);
         lastWord = getFromBunndle(LAST_WORD_BUNDLE);
 
-        chatEditText.setText(lastWord);
+        firstLineTextView.setText(firstLine);
+        chatEditText.setHint(lastWord);
     }
 
     @Nullable
