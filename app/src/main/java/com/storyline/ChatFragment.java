@@ -370,7 +370,7 @@ public class ChatFragment extends Fragment {
                         //update my turn
                         updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword));
 
-                        mMessageEditText.setText("");
+//                        mMessageEditText.setText("");
 
                         isLastTurn = true;
 

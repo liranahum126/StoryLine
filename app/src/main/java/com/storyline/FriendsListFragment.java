@@ -106,6 +106,7 @@ public class FriendsListFragment extends Fragment {
                                 ((MainStoriesActivity) getActivity()).replaceFragmentInActivity(chatFragment);
                             }else {
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(fullStoryId);
+                                ref.orderByValue();
                                 ref.addListenerForSingleValueEvent(
                                         new ValueEventListener() {
                                             @Override
