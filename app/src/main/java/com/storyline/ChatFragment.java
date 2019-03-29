@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.storyline.ui.FullStoryDialogFragment;
 import com.storyline.ui.categories.model.Category;
 
 import java.util.ArrayList;
@@ -90,6 +92,7 @@ public class ChatFragment extends Fragment {
     private EditText mMessageEditText;
     private ImageView mAddMessageImageView;
     private TextView textViewOpen;
+    private FullStoryDialogFragment fullStoryDialogFragment;
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -101,7 +104,6 @@ public class ChatFragment extends Fragment {
     private String openingSentance;
     private String friendUserId;
     private Category category;
-    StringBuilder fullStory = new StringBuilder();
 
     public void setCategory(Category category) {
         this.category = category;
@@ -196,11 +198,6 @@ public class ChatFragment extends Fragment {
                         .setQuery(messagesRef, parser)
                         .build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MainActivity.MessageViewHolder>(options) {
-            // fullStory = new StringBuilder();
-
-//            public StringBuilder getFullStory() {
-//                return fullStory;
-//            }
 
             @Override
             public MainActivity.MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -213,7 +210,6 @@ public class ChatFragment extends Fragment {
             protected void onBindViewHolder(final MainActivity.MessageViewHolder viewHolder,
                                             int position,
                                             FriendlyMessage friendlyMessage) {
-                fullStory.append(friendlyMessage.getText()).append("\n");
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -344,17 +340,30 @@ public class ChatFragment extends Fragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mFirebaseAdapter.getItemCount() < STORY_LENGTH) {
+            //    if(mFirebaseAdapter.getItemCount() < STORY_LENGTH) {
 
                     if (mFirebaseAdapter.getItemCount() < STORY_LENGTH - 1) {
                         ((MainStoriesActivity) getActivity()).moveToFriendsListFragment();
                     } else {
-                        mSendButton.setText("Discover");
+
                         Toast.makeText(getActivity(), "end game", Toast.LENGTH_LONG).show();
+
+                        StringBuilder fullStory = new StringBuilder();
+                        for(int i = 0; i< mFirebaseAdapter.getItemCount() - 1; ++i){
+
+                            fullStory.append(mFirebaseAdapter.getItem(i).getText().trim()).append("\n");
+
+                        }
+                        fullStory.append(mMessageEditText.getText().toString().trim());
+                        Toast.makeText(getActivity(), fullStory.toString(), Toast.LENGTH_LONG).show();
+                        fullStoryDialogFragment = FullStoryDialogFragment.newInstance(fullStory.toString());
+                        fullStoryDialogFragment.show(getChildFragmentManager(), null);
+
+
                     }
 
                     FriendlyMessage friendlyMessage = new
-                            FriendlyMessage(mMessageEditText.getText().toString(),
+                            FriendlyMessage(mMessageEditText.getText().toString().trim(),
                             "mUsername",
                             mPhotoUrl,
                             null /* no image */);
@@ -381,7 +390,7 @@ public class ChatFragment extends Fragment {
 
                     final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
 
-                    String lastword = mMessageEditText.getText().toString().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
+                    String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
 
                     //update friends turn
                     updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), true, lastword));
@@ -391,9 +400,16 @@ public class ChatFragment extends Fragment {
 
                     mMessageEditText.setText("");
 
-                }else{
-                    Toast.makeText(getActivity(), fullStory.toString(), Toast.LENGTH_LONG);
-                }
+//                }else{
+//                    StringBuilder fullStory = new StringBuilder();
+//                    for(int i = 0; i< mFirebaseAdapter.getItemCount() - 1; ++i){
+//
+//                        fullStory.append(mFirebaseAdapter.getItem(i).getText().trim()).append("\n");
+//
+//                    }
+//                    fullStory.append(mMessageEditText.getText().toString().trim());
+//                    Toast.makeText(getActivity(), fullStory.toString(), Toast.LENGTH_LONG).show();
+//                }
             }
         });
     }

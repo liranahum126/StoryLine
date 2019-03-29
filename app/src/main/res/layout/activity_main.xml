@@ -121,10 +121,12 @@ tools:context=".ui.chat.ChatFragment">
 
 
     <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
+        android:visibility="invisible"
         android:id="@+id/messageRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
 
