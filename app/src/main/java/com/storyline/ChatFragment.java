@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -108,7 +109,7 @@ public class ChatFragment extends Fragment {
     private GoogleApiClient mGoogleApiClient;
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
 
-    private Button mSendButton;
+    private ImageButton mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
@@ -180,7 +181,7 @@ public class ChatFragment extends Fragment {
         setFriendUserId();
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
-        textViewOpen = view.findViewById(R.id.textViewOpen);
+        textViewOpen = view.findViewById(R.id.first_line_text_view);
 
         textViewOpen.setText(openingSentance);
 
@@ -320,7 +321,7 @@ public class ChatFragment extends Fragment {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
 
-        mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+        mMessageEditText = (EditText) view.findViewById(R.id.chat_edit_text);
 //        mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(mSharedPreferences
 //                .getInt(CodelabPreferences.FRIENDLY_MSG_LENGTH, DEFAULT_MSG_LENGTH_LIMIT))});
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -342,7 +343,7 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        mSendButton = (Button) view.findViewById(R.id.sendButton);
+        mSendButton = view.findViewById(R.id.send_image_button);
 //        mSendButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -377,7 +378,6 @@ public class ChatFragment extends Fragment {
             mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
         }
 
-        mSendButton = (Button) view.findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
