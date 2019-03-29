@@ -1,14 +1,29 @@
 package com.storyline;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class InterActiveFriend {
     String userId;
-    boolean isMyTurn;
     String lastWord;
 
+    public static final int START_GAME = 0;
+    public static final int MY_TURN = 1;
+    public static final int FRIEND_TURN = 2;
+    public static final int END_GAME = 3;
 
-    public InterActiveFriend(String userId, boolean isMyTurn, String lastWord) {
+    @IntDef({START_GAME, MY_TURN, FRIEND_TURN, END_GAME})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TurnStatus{};
+
+    @TurnStatus int currentGameStatus = START_GAME;
+
+
+    public InterActiveFriend(String userId, @TurnStatus int currentGameStatus, String lastWord) {
         this.userId = userId;
-        this.isMyTurn = isMyTurn;
+        this.currentGameStatus = currentGameStatus;
         this.lastWord = lastWord;
     }
 
@@ -24,19 +39,19 @@ public class InterActiveFriend {
         this.userId = userId;
     }
 
-    public boolean isMyTurn() {
-        return isMyTurn;
-    }
-
-    public void setMyTurn(boolean myTurn) {
-        isMyTurn = myTurn;
-    }
-
     public String getLastWord() {
         return lastWord;
     }
 
     public void setLastWord(String lastWord) {
         this.lastWord = lastWord;
+    }
+
+    public int getCurrentGameStatus() {
+        return currentGameStatus;
+    }
+
+    public void setCurrentGameStatus(int currentGameStatus) {
+        this.currentGameStatus = currentGameStatus;
     }
 }

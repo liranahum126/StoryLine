@@ -27,14 +27,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.storyline.ui.FullStoryDialogFragment;
 import com.storyline.ui.categories.listeners.StartStoryListener;
 import com.storyline.ui.categories.model.Category;
 import com.storyline.ui.categories.providers.CategoriesProvider;
 import com.storyline.ui.categories.views.CategoriesFragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.storyline.InterActiveFriend.END_GAME;
+import static com.storyline.InterActiveFriend.FRIEND_TURN;
+import static com.storyline.InterActiveFriend.MY_TURN;
 
 public class FriendsListFragment extends Fragment {
     private DatabaseReference mFirebaseDatabaseReference;
@@ -44,6 +50,7 @@ public class FriendsListFragment extends Fragment {
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseAuth mFirebaseAuth;
     public FirebaseUser mFirebaseUser;
+    private String theStory;
   //  private ProgressBar mProgressBar;
 
     private User myInnerTableUser;
@@ -87,12 +94,34 @@ public class FriendsListFragment extends Fragment {
                         if (interActiveFriend != null) {
                             ChatFragment chatFragment = new ChatFragment();
 
+                            String fullStoryId;
                             if(friendUser.userId.compareTo(mFirebaseUser.getUid()) > 0){
                                 chatFragment.setMESSAGES_CHILD(friendUser.userId + mFirebaseUser.getUid());
+                                fullStoryId = friendUser.userId + mFirebaseUser.getUid();
                             }else {
                                 chatFragment.setMESSAGES_CHILD(mFirebaseUser.getUid() + friendUser.userId);
+                                fullStoryId = mFirebaseUser.getUid() + friendUser.userId;
                             }
-                            ((MainStoriesActivity)getActivity()).replaceFragmentInActivity(chatFragment);
+                            if (interActiveFriend.getCurrentGameStatus() != END_GAME) {
+                                ((MainStoriesActivity) getActivity()).replaceFragmentInActivity(chatFragment);
+                            }else {
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(fullStoryId);
+                                ref.addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                //Get map of users in datasnapshot
+                                                story((HashMap<String,Object>) dataSnapshot.getValue());
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                //handle databaseError
+                                            }
+                                        });
+                                FullStoryDialogFragment fullStoryDialogFragment = FullStoryDialogFragment.newInstance(theStory);
+                                fullStoryDialogFragment.show(getChildFragmentManager(), null);
+                            }
                         }else{
                             moveToCategoryFragment(friendUser);
                         }
@@ -105,6 +134,21 @@ public class FriendsListFragment extends Fragment {
         }
     }
 
+    private void story(HashMap<String,Object> sentences) {
+
+        ArrayList<String> story = new ArrayList<>();
+
+        //iterate through each user, ignoring their UID
+        for (HashMap.Entry<String, Object> entry : sentences.entrySet()){
+
+            //Get user map
+            HashMap singleUser = (HashMap) entry.getValue();
+            //Get phone field and append to list
+            story.add((String) singleUser.get("text"));
+        }
+
+        theStory = story.toString();
+    }
 
     @Nullable
     @Override
@@ -177,15 +221,22 @@ public class FriendsListFragment extends Fragment {
                     if (interActiveFriendHashMap != null) {
                         InterActiveFriend interActiveFriend = interActiveFriendHashMap.get(mFirebaseUser.getUid());
                         if (interActiveFriend != null) {
-                            boolean isMyTurn = interActiveFriend.isMyTurn();
-                            if (!isMyTurn) {
+                            @InterActiveFriend.TurnStatus int turn = interActiveFriend.getCurrentGameStatus();
+                            switch (turn) {
+                                case MY_TURN:
                                 viewHolder.messengerTextView.setText("myTurn");
                                 viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_edit);
                                 changeMyTurnColor(viewHolder.itemView);
-                            } else {
+                                break;
+                                case FRIEND_TURN:
                                 viewHolder.messengerTextView.setText("friend turn");
                                 viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_edit);
                                 changeFriendTurnColor(viewHolder.itemView);
+                                break;
+                                case END_GAME:
+                                    viewHolder.messengerTextView.setText("discover story");
+                                    viewHolder.messengerImageView.setImageResource(R.drawable.storyline_btn_edit);
+                                    break;
                             }
                         } else {
                             viewHolder.messengerTextView.setText("start game");
