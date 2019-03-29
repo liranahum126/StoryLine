@@ -8,12 +8,16 @@ import java.util.List;
 public class Category implements Parcelable {
 
     private String categoryName;
-    private int categoryImageId;
+    private int background;
+    private int logo;
+    private int avatar;
     private List<String> categoryLines;
 
-    public Category(String categoryName, int categoryImageId, List<String> categoryLines) {
+    public Category(String categoryName, int background, int logo, int avatar, List<String> categoryLines) {
         this.categoryName = categoryName;
-        this.categoryImageId = categoryImageId;
+        this.background = background;
+        this.logo = logo;
+        this.avatar = avatar;
         this.categoryLines = categoryLines;
     }
 
@@ -21,8 +25,16 @@ public class Category implements Parcelable {
         return categoryName;
     }
 
-    public int getCategoryImageId() {
-        return categoryImageId;
+    public int getBackground() {
+        return background;
+    }
+
+    public int getLogo() {
+        return logo;
+    }
+
+    public int getAvatar() {
+        return avatar;
     }
 
     public List<String> getCategoryLines() {
@@ -37,13 +49,17 @@ public class Category implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.categoryName);
-        dest.writeInt(this.categoryImageId);
+        dest.writeInt(this.background);
+        dest.writeInt(this.logo);
+        dest.writeInt(this.avatar);
         dest.writeStringList(this.categoryLines);
     }
 
     protected Category(Parcel in) {
         this.categoryName = in.readString();
-        this.categoryImageId = in.readInt();
+        this.background = in.readInt();
+        this.logo = in.readInt();
+        this.avatar = in.readInt();
         this.categoryLines = in.createStringArrayList();
     }
 

@@ -34,6 +34,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
+    private ImageView logo;
     private ImageView categoryPictureImageView;
     private TextView categoryNameTextView;
     private WrapContentViewPager categoryLinesViewPager;
@@ -57,6 +58,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
         categoryPictureImageView = view.findViewById(R.id.category_picture_image_view);
         categoryNameTextView = view.findViewById(R.id.category_name_text_view);
         categoryLinesViewPager = view.findViewById(R.id.category_line_view_pager);
+        logo = view.findViewById(R.id.imageView);
 
         forwardButton.setOnClickListener(this);
         backwardButton.setOnClickListener(this);
@@ -69,8 +71,12 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
 
     private void initCategory(Category category) {
         // set category image
-        if (category.getCategoryImageId() != 0) {
-            categoryPictureImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), category.getCategoryImageId()));
+        if (category.getBackground() != 0) {
+            categoryPictureImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), category.getBackground()));
+        }
+
+        if (category.getLogo() != 0) {
+            logo.setImageDrawable(ContextCompat.getDrawable(getContext(), category.getLogo()));
         }
 
         // set category name
