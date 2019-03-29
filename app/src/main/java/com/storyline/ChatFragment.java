@@ -342,6 +342,7 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
             //    if(mFirebaseAdapter.getItemCount() < STORY_LENGTH) {
 
+                boolean isLastTurn = false;
                     if (mFirebaseAdapter.getItemCount() < STORY_LENGTH - 1) {
                         ((MainStoriesActivity) getActivity()).moveToFriendsListFragment();
                     } else {
@@ -359,6 +360,19 @@ public class ChatFragment extends Fragment {
                         fullStoryDialogFragment = FullStoryDialogFragment.newInstance(fullStory.toString());
                         fullStoryDialogFragment.show(getChildFragmentManager(), null);
 
+                        final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
+
+                        String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
+
+                        //update friends turn
+                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword));
+
+                        //update my turn
+                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword));
+
+                        mMessageEditText.setText("");
+
+                        isLastTurn = true;
 
                     }
 
@@ -388,18 +402,19 @@ public class ChatFragment extends Fragment {
                             .push().setValue(friendlyMessage);
 
 
-                    final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
+                    if (!isLastTurn) {
+                        final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
 
-                    String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
+                        String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
 
-                    //update friends turn
-                    updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), true, lastword));
+                        //update friends turn
+                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword));
 
-                    //update my turn
-                    updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, false, lastword));
+                        //update my turn
+                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.MY_TURN, lastword));
 
-                    mMessageEditText.setText("");
-
+                        mMessageEditText.setText("");
+                    }
 //                }else{
 //                    StringBuilder fullStory = new StringBuilder();
 //                    for(int i = 0; i< mFirebaseAdapter.getItemCount() - 1; ++i){
