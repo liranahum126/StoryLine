@@ -23,8 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Success"
+        android:fontFamily="@font/life_is_goofy"
         android:textColor="@color/bright_black"
-        android:textSize="60sp"
+        android:textSize="80sp"
         app:layout_constraintEnd_toEndOf="@+id/success_logo_imagee_view"
         app:layout_constraintStart_toStartOf="@+id/success_logo_imagee_view"
         app:layout_constraintTop_toBottomOf="@+id/success_logo_imagee_view" />
