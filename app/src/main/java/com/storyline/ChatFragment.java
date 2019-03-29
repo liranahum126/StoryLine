@@ -53,6 +53,29 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatFragment extends Fragment {
 
+
+    private static final String FIRST_LINE_BUNDLE = "FIRST_LINE_BUNDLE";
+    private static final String LAST_WORD_BUNDLE = "LAST_WORD_BUNDLE";
+
+    private ProgressBar progressBar;
+    private EditText chatEditText;
+    private TextView firstLineTextView;
+
+    private String firstLine;
+    private String lastWord;
+
+    public static com.storyline.ui.chat.ChatFragment newInstance(String firstLine, String lastWord) {
+
+        Bundle args = new Bundle();
+        args.putString(FIRST_LINE_BUNDLE, firstLine);
+        args.putString(LAST_WORD_BUNDLE, lastWord);
+        com.storyline.ui.chat.ChatFragment fragment = new com.storyline.ui.chat.ChatFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
@@ -122,7 +145,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.activity_main, container, false);
+        return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
     private void setFriendUserId(){
@@ -130,14 +153,32 @@ public class ChatFragment extends Fragment {
         friendUserId =  friendUserId.replace(mFirebaseUser.getUid(),"");
     }
 
+    @Nullable
+    private String getFromBunndle(String key) {
+        Bundle bundle = getArguments();
+        if (bundle == null) return null;
+
+        return bundle.getString(key);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        chatEditText = view.findViewById(R.id.chat_edit_text);
+        firstLineTextView = view.findViewById(R.id.first_line_text_view);
+
+        firstLine = getFromBunndle(FIRST_LINE_BUNDLE);
+        lastWord = getFromBunndle(LAST_WORD_BUNDLE);
+
+        firstLineTextView.setText(firstLine);
+        chatEditText.setHint(lastWord);
+
         // Initialize ProgressBar and RecyclerView.
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         setFriendUserId();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
         textViewOpen = view.findViewById(R.id.textViewOpen);
 
