@@ -15,6 +15,10 @@
  */
 package com.storyline;
 
+import android.text.style.TtsSpan;
+
+import java.util.Date;
+
 public class FriendlyMessage {
 
     private String id;
@@ -22,16 +26,22 @@ public class FriendlyMessage {
     private String name;
     private String photoUrl;
     private String imageUrl;
+    private int order;
 
     public FriendlyMessage() {
     }
 
-    public FriendlyMessage(String text, String name, String photoUrl, String imageUrl) {
+    public FriendlyMessage(String text, String name, String photoUrl, String imageUrl, int order) {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
         this.imageUrl = imageUrl;
+        this.order = order;
     }
+
+    public int getOrder() {return order;}
+
+    public void setOrder(int order) { this.order = order;}
 
     public String getId() {
         return id;

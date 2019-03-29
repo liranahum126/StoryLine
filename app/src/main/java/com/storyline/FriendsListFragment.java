@@ -34,6 +34,9 @@ import com.storyline.ui.categories.providers.CategoriesProvider;
 import com.storyline.ui.categories.views.CategoriesFragment;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -105,21 +108,23 @@ public class FriendsListFragment extends Fragment {
                             if (interActiveFriend.getCurrentGameStatus() != END_GAME) {
                                 ((MainStoriesActivity) getActivity()).replaceFragmentInActivity(chatFragment);
                             }else {
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(fullStoryId);
-                                ref.orderByValue();
-                                ref.addListenerForSingleValueEvent(
-                                        new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                //Get map of users in datasnapshot
-                                                story((HashMap<String,Object>) dataSnapshot.getValue());
-                                            }
+//                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(fullStoryId);
+//                                ref.orderByChild("order");
+//                                ref.addListenerForSingleValueEvent(
+//                                        new ValueEventListener() {
+//                                            @Override
+//                                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                //Get map of users in datasnapshot
+//                                                story((HashMap<String,Object>) dataSnapshot.getValue());
+//                                            }
+//
+//                                            @Override
+//                                            public void onCancelled(DatabaseError databaseError) {
+//                                                //handle databaseError
+//                                            }
+//                                        });
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                //handle databaseError
-                                            }
-                                        });
+                                theStory = friendUser.getInterActiveFriendList().get(mFirebaseUser.getUid()).getFullStory();
                                 FullStoryDialogFragment fullStoryDialogFragment = FullStoryDialogFragment.newInstance(theStory);
                                 fullStoryDialogFragment.show(getChildFragmentManager(), null);
                             }
@@ -147,7 +152,12 @@ public class FriendsListFragment extends Fragment {
             //Get phone field and append to list
             story.add((String) singleUser.get("text"));
         }
-
+        Collections.sort(story, new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return 0;
+            }
+        });
         theStory = story.toString();
     }
 

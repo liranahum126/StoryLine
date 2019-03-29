@@ -104,6 +104,7 @@ public class ChatFragment extends Fragment {
     private String openingSentance;
     private String friendUserId;
     private Category category;
+    private int currentCount;
 
     public void setCategory(Category category) {
         this.category = category;
@@ -161,6 +162,7 @@ public class ChatFragment extends Fragment {
                 InterActiveFriend interActiveFriend = snapshot.getValue(InterActiveFriend.class);
                 if(interActiveFriend != null && !TextUtils.isEmpty(interActiveFriend.lastWord)){
                     textViewOpen.setText("Your line starts with the word " + interActiveFriend.lastWord);
+                     currentCount = interActiveFriend.count;
                 }
 
 
@@ -365,10 +367,14 @@ public class ChatFragment extends Fragment {
                         String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
 
                         //update friends turn
-                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword));
+                        InterActiveFriend interActiveFriendFriendTurn = new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword, currentCount+1);
+                        interActiveFriendFriendTurn.setFullStory(fullStory.toString());
+                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(interActiveFriendFriendTurn);
 
                         //update my turn
-                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword));
+                        InterActiveFriend interActiveFriendMyTurn = new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword,currentCount+1);
+                        interActiveFriendMyTurn.setFullStory(fullStory.toString());
+                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(interActiveFriendMyTurn);
 
 //                        mMessageEditText.setText("");
 
@@ -380,7 +386,7 @@ public class ChatFragment extends Fragment {
                             FriendlyMessage(mMessageEditText.getText().toString().trim(),
                             "mUsername",
                             mPhotoUrl,
-                            null /* no image */);
+                            null /* no image */,currentCount);
                     friendlyMessage.setId(mFirebaseUser.getUid());
 //                String friendUserId = MESSAGES_CHILD;
 //                friendUserId =  friendUserId.replace(mFirebaseUser.getUid(),"");
@@ -390,7 +396,8 @@ public class ChatFragment extends Fragment {
                                 FriendlyMessage(openingSentance,
                                 "mUsername",
                                 mPhotoUrl,
-                                null /* no image */);
+                                null /* no image */,
+                                currentCount);
                         friendlyMessageOpening.setId(friendUserId);
                         mFirebaseDatabaseReference.child(MESSAGES_CHILD)
                                 .push().setValue(friendlyMessageOpening);
@@ -408,10 +415,10 @@ public class ChatFragment extends Fragment {
                         String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
 
                         //update friends turn
-                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword));
+                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword,currentCount+1));
 
                         //update my turn
-                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.MY_TURN, lastword));
+                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.MY_TURN, lastword,currentCount+1));
 
                         mMessageEditText.setText("");
                     }
