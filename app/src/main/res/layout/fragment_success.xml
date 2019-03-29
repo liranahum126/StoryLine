@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bright_blue"
+    tools:context=".ui.success.SuccessFragment">
+
+    <ImageView
+        android:id="@+id/success_logo_imagee_view"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="85dp"
+        android:src="@drawable/storyline_story_logo_success"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/success_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Success"
+        android:textColor="@color/bright_black"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="@+id/success_logo_imagee_view"
+        app:layout_constraintStart_toStartOf="@+id/success_logo_imagee_view"
+        app:layout_constraintTop_toBottomOf="@+id/success_logo_imagee_view" />
+
+    <TextView
+        android:id="@+id/secondary_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YOUR LINE IS ON THE WAY "
+        android:textColor="@color/bright_black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/success_text_view"
+        app:layout_constraintStart_toStartOf="@+id/success_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/success_text_view" />
+
+</android.support.constraint.ConstraintLayout>
