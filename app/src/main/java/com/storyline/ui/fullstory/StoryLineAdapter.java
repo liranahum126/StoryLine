@@ -15,9 +15,11 @@ import java.util.List;
 public class StoryLineAdapter extends RecyclerView.Adapter<StoryLineAdapter.StoryLineViewHolder> {
 
     private List<String> storyLinesArray;
+    private int iconResourceId;
 
-    public StoryLineAdapter(List<String> storyLinesArray) {
+    public StoryLineAdapter(List<String> storyLinesArray, int iconResoourceId) {
         this.storyLinesArray = storyLinesArray;
+        this.iconResourceId = iconResoourceId;
     }
 
     @NonNull
@@ -33,7 +35,10 @@ public class StoryLineAdapter extends RecyclerView.Adapter<StoryLineAdapter.Stor
 
         String line = storyLinesArray.get(position);
 
+        storyLineViewHolder.storyLineTextView.setText(line);
+
         if (position == 0) {
+            storyLineViewHolder.logoImageView.setImageResource(iconResourceId);
             storyLineViewHolder.logoImageView.setVisibility(View.VISIBLE);
         }
     }

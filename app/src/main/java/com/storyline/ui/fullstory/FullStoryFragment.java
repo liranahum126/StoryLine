@@ -4,16 +4,21 @@ package com.storyline.ui.fullstory;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.storyline.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,8 +28,7 @@ public class FullStoryFragment extends Fragment {
     private static final String STORY_LINE_ARRAY_BUNDLE = "STORY_LINE_ARRAY_BUNDLE";
     private static final String CATEGORY_NAME_BUNDLE = "CATEGORY_NAME_BUNDLE";
 
-    private RecyclerView storyLinesRecyclerView;
-    private StoryLineAdapter storyLineAdapter;
+    private LinearLayout storyLinesLinearLayout;
 
     public static FullStoryFragment newInstance(ArrayList<String> storyLinesArray, String categoryName) {
         Bundle args = new Bundle();
@@ -45,14 +49,34 @@ public class FullStoryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        storyLinesRecyclerView = view.findViewById(R.id.story_lines_recycler_view);
-        storyLinesRecyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        storyLinesLinearLayout = view.findViewById(R.id.story_lines_linearlayout);
 
-//        storyLineAdapter = new StoryLineAdapter(getStoryLinesArray(),
-//                getCategoryIconFromCategoryName());
-        storyLinesRecyclerView.setAdapter(storyLineAdapter);
+        int iconResourceId = getCategoryIconFromCategoryName(getCategoryName());
+        initLinearLayout(getStoryLinesArray(), iconResourceId);
+    }
 
+    private void initLinearLayout(List<String> storyLinesArray, int iconResourceId) {
+        for (int position = 0; position < storyLinesArray.size(); position++) {
+            String line = storyLinesArray.get(position);
+
+            View storyLineItemView = LayoutInflater.from(getContext()).inflate(R.layout.item_story_line, null, false);
+
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 100, 0, 0);
+            storyLineItemView.setLayoutParams(params);
+
+            TextView storyLineTextView = storyLineItemView.findViewById(R.id.line_text_view);
+
+            storyLineTextView.setText(line);
+
+            if (position == 0) {
+                ImageView logoImageView = storyLineItemView.findViewById(R.id.logo_image_view);
+                logoImageView.setImageResource(iconResourceId);
+                logoImageView.setVisibility(View.VISIBLE);
+            }
+
+            storyLinesLinearLayout.addView(storyLineItemView);
+        }
     }
 
     @Nullable
