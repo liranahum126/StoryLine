@@ -6,7 +6,8 @@
     android:layout_height="100dp"
     android:background="@color/bright_blue"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:paddingEnd="16dp"
+    android:layout_marginTop="30dp">
 
     <ImageView
         android:id="@+id/user_icon"
@@ -39,12 +40,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/bright_black"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.287"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.683"
+        app:layout_constraintStart_toStartOf="@+id/user_name_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/user_name_text_view"
         tools:text="Write a new Storyline" />
 
     <ImageView

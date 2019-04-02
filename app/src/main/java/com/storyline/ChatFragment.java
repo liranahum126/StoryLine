@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,6 +53,29 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatFragment extends Fragment {
+
+
+    private static final String FIRST_LINE_BUNDLE = "FIRST_LINE_BUNDLE";
+    private static final String LAST_WORD_BUNDLE = "LAST_WORD_BUNDLE";
+
+    private ProgressBar progressBar;
+    private EditText chatEditText;
+    private TextView firstLineTextView;
+
+    private String firstLine;
+    private String lastWord;
+
+    public static com.storyline.ui.chat.ChatFragment newInstance(String firstLine, String lastWord) {
+
+        Bundle args = new Bundle();
+        args.putString(FIRST_LINE_BUNDLE, firstLine);
+        args.putString(LAST_WORD_BUNDLE, lastWord);
+        com.storyline.ui.chat.ChatFragment fragment = new com.storyline.ui.chat.ChatFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
@@ -85,7 +109,7 @@ public class ChatFragment extends Fragment {
     private GoogleApiClient mGoogleApiClient;
     private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
 
-    private Button mSendButton;
+    private ImageButton mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
@@ -123,7 +147,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.activity_main, container, false);
+        return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
     private void setFriendUserId(){
@@ -131,16 +155,34 @@ public class ChatFragment extends Fragment {
         friendUserId =  friendUserId.replace(mFirebaseUser.getUid(),"");
     }
 
+    @Nullable
+    private String getFromBunndle(String key) {
+        Bundle bundle = getArguments();
+        if (bundle == null) return null;
+
+        return bundle.getString(key);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        chatEditText = view.findViewById(R.id.chat_edit_text);
+        firstLineTextView = view.findViewById(R.id.first_line_text_view);
+
+        firstLine = getFromBunndle(FIRST_LINE_BUNDLE);
+        lastWord = getFromBunndle(LAST_WORD_BUNDLE);
+
+        firstLineTextView.setText(firstLine);
+        chatEditText.setHint(lastWord);
+
         // Initialize ProgressBar and RecyclerView.
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         setFriendUserId();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
-        textViewOpen = view.findViewById(R.id.textViewOpen);
+        textViewOpen = view.findViewById(R.id.first_line_text_view);
 
         textViewOpen.setText(openingSentance);
 
@@ -281,7 +323,7 @@ public class ChatFragment extends Fragment {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
 
-        mMessageEditText = (EditText) view.findViewById(R.id.messageEditText);
+        mMessageEditText = (EditText) view.findViewById(R.id.chat_edit_text);
 //        mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(mSharedPreferences
 //                .getInt(CodelabPreferences.FRIENDLY_MSG_LENGTH, DEFAULT_MSG_LENGTH_LIMIT))});
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -303,7 +345,7 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        mSendButton = (Button) view.findViewById(R.id.sendButton);
+        mSendButton = view.findViewById(R.id.send_image_button);
 //        mSendButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -338,7 +380,6 @@ public class ChatFragment extends Fragment {
             mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
         }
 
-        mSendButton = (Button) view.findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

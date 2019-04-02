@@ -1,10 +1,14 @@
-package com.storyline.ui.categories;
+package com.storyline.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.storyline.R;
 import com.storyline.ui.chat.ChatFragment;
+import com.storyline.ui.fullstory.FullStoryFragment;
+
+import java.util.ArrayList;
 
 public class TempActivity extends AppCompatActivity {
 
@@ -22,12 +26,22 @@ public class TempActivity extends AppCompatActivity {
             }
         });*/
 
-        ChatFragment chatFragment = ChatFragment.newInstance("Some first line", "lastWord");
+//        ChatFragment chatFragment = ChatFragment.newInstance("Some first line", "lastWord");
 
-        openFragment(chatFragment);
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("advadvdavdv");
+        strings.add("advadvdavdv");
+        strings.add("advadvdavdv");
+        strings.add("advadvdavdv");
+        strings.add("advadvdavdv");
+        strings.add("advadvdavdv");
+
+        FullStoryFragment fullStoryFragment = FullStoryFragment.newInstance(strings, "some category name");
+
+        openFragment(fullStoryFragment);
     }
 
-    private void openFragment(ChatFragment fragment) {
+    private void openFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.container, fragment)
