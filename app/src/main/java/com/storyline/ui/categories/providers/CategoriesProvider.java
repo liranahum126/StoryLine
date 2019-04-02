@@ -27,7 +27,7 @@ public class CategoriesProvider {
         List<String> fairytaleCategoryLines = new ArrayList<>();
         fairytaleCategoryLines.add("Once upon a time the kingdom was under...");
         fairytaleCategoryLines.add("In a faraway land there was a magical...");
-        fairytaleCategoryLines.add("The princess was sad the day because...");
+        fairytaleCategoryLines.add("The princess was sad today because...");
 
         categories.add(new Category("Fairytale",
                 R.drawable.storyline_theme_bg_fairytale,
