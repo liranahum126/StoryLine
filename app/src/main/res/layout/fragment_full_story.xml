@@ -50,13 +50,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/story_lines_linearlayout"
+        <TextView
+            android:id="@+id/text_view_story_line"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginTop="20dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:fontFamily="@font/life_is_goofy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_text_view" />
@@ -73,7 +76,7 @@
             app:layout_constraintVertical_bias="1"
             app:layout_constraintBottom_toBottomOf="@+id/dim_view"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/story_lines_linearlayout" />
+            app:layout_constraintTop_toBottomOf="@+id/text_view_story_line" />
 
         <ImageButton
             android:id="@+id/save_image_button"
@@ -87,7 +90,7 @@
             app:layout_constraintVertical_bias="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/story_lines_linearlayout" />
+            app:layout_constraintTop_toBottomOf="@+id/text_view_story_line" />
 
     </android.support.constraint.ConstraintLayout>
 

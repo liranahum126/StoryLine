@@ -49,7 +49,7 @@ public class FullStoryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        storyLinesLinearLayout = view.findViewById(R.id.story_lines_linearlayout);
+//        storyLinesLinearLayout = view.findViewById(R.id.story_lines_linearlayout);
 
         int iconResourceId = getCategoryIconFromCategoryName(getCategoryName());
         initLinearLayout(getStoryLinesArray(), iconResourceId);

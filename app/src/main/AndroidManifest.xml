@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainStoriesActivity">
+        <activity android:name=".MainStoriesActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->

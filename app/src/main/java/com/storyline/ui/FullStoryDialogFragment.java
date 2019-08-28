@@ -30,9 +30,9 @@ public class FullStoryDialogFragment extends AbsFullScreenDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_dialog_full_story, container, false);
+        View view = inflater.inflate(R.layout.fragment_full_story, container, false);
 
-        fullStoryTv = (TextView) view.findViewById(R.id.fullStoryTextView);
+        fullStoryTv = (TextView) view.findViewById(R.id.text_view_story_line);
         fullStoryTv.setText(getArguments().getString(FULL_STORY_KEY));
 
         return view;

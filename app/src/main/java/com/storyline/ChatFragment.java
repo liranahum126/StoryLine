@@ -393,7 +393,7 @@ public class ChatFragment extends Fragment {
                         Toast.makeText(getActivity(), "end game", Toast.LENGTH_LONG).show();
 
                         StringBuilder fullStory = new StringBuilder();
-                        for(int i = 0; i< mFirebaseAdapter.getItemCount() - 1; ++i){
+                        for(int i = 0; i< mFirebaseAdapter.getItemCount(); ++i){
 
                             fullStory.append(mFirebaseAdapter.getItem(i).getText().trim()).append("\n");
 
