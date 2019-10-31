@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class User {
-    String userId;
-    String userEmail;
-    String name;
-    String photoUrl;
-    HashMap<String,InterActiveFriend> interActiveFriendList;
+    public String userId;
+    public String userEmail;
+    public String name;
+    public String photoUrl;
+    public HashMap<String,InterActiveFriend> interActiveFriendList;
 
 
     public User() {

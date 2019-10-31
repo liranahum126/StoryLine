@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
+import com.storyline.ui.success.SuccessFragment;
 
 public class MainStoriesActivity extends AppCompatActivity {
 
@@ -29,6 +30,10 @@ public class MainStoriesActivity extends AppCompatActivity {
 
     public void moveToFriendsListFragment(){
         replaceFragmentInActivity(new FriendsListFragment());
+    }
+
+    public void moveToSuccessFragment(){
+        replaceFragmentInActivity(new SuccessFragment());
     }
 
     @Override

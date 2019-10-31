@@ -95,7 +95,7 @@ public class ChatFragment extends Fragment {
     private static final String TAG = "MainActivity";
     public String MESSAGES_CHILD = "";
 
-    private static final int STORY_LENGTH = 5;
+    private static final int STORY_LENGTH = 7;
 
     private static final int REQUEST_INVITE = 1;
     private static final int REQUEST_IMAGE = 2;
@@ -215,15 +215,6 @@ public class ChatFragment extends Fragment {
 
             }
         });
-
-
-
-
-
-
-
-
-
 
         SnapshotParser<FriendlyMessage> parser = new SnapshotParser<FriendlyMessage>() {
             @Override
@@ -387,7 +378,7 @@ public class ChatFragment extends Fragment {
 
                 boolean isLastTurn = false;
                     if (mFirebaseAdapter.getItemCount() < STORY_LENGTH - 1) {
-                        ((MainStoriesActivity) getActivity()).moveToFriendsListFragment();
+                        ((MainStoriesActivity) getActivity()).moveToSuccessFragment();
                     } else {
 
                         Toast.makeText(getActivity(), "end game", Toast.LENGTH_LONG).show();
