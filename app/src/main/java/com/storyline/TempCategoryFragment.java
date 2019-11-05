@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.storyline.ui.chat.ChatFragment;
 
 public class TempCategoryFragment extends Fragment {
     Button button;

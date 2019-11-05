@@ -6,10 +6,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class InterActiveFriend {
-    String userId;
-    String lastWord;
-    int count;
-    String fullStory;
+    public String userId;
+    public String lastWord;
+    public int count;
+    public String fullStory;
 
     public static final int START_GAME = 0;
     public static final int MY_TURN = 1;

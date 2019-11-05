@@ -65,10 +65,10 @@ public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView;
-        ImageView messageImageView;
-        TextView messengerTextView;
-        CircleImageView messengerImageView;
+       public TextView messageTextView;
+        public ImageView messageImageView;
+        public TextView messengerTextView;
+        public CircleImageView messengerImageView;
 
         public MessageViewHolder(View v) {
             super(v);

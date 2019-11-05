@@ -15,7 +15,7 @@ import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.storyline.ChatFragment;
+import com.storyline.ui.chat.ChatFragment;
 import com.storyline.MainStoriesActivity;
 import com.storyline.R;
 import com.storyline.ui.categories.adapter.CategoryAdapter;

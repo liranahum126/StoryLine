@@ -25,6 +25,7 @@ import com.storyline.ui.categories.listeners.StartStoryListener;
 import com.storyline.ui.categories.model.Category;
 import com.storyline.ui.categories.providers.CategoriesProvider;
 import com.storyline.ui.categories.views.CategoriesFragment;
+import com.storyline.ui.chat.ChatFragment;
 import com.storyline.ui.users.adapter.UsersFirebaseRecyclerAdapter;
 
 public class FriendsListFragment extends Fragment {
