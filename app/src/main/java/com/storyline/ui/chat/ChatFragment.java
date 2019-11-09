@@ -15,14 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,50 +35,32 @@ import com.storyline.R;
 import com.storyline.ui.FullStoryDialogFragment;
 import com.storyline.ui.categories.model.Category;
 import com.storyline.ui.chat.adapter.ChatAdapter;
+import com.storyline.utils.FirebaseUtil;
 
 public class ChatFragment extends Fragment {
     private static final String FIRST_LINE_BUNDLE = "FIRST_LINE_BUNDLE";
     private static final String LAST_WORD_BUNDLE = "LAST_WORD_BUNDLE";
-
-    private ProgressBar progressBar;
     private EditText chatEditText;
     private TextView firstLineTextView;
-
     private String firstLine;
     private String lastWord;
     private static final String TAG = "ChatFragment";
     public String MESSAGES_CHILD = "";
-
     private static final int STORY_LENGTH = 7;
-
-    private static final int REQUEST_INVITE = 1;
-    private static final int REQUEST_IMAGE = 2;
-    private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
-    public static final int DEFAULT_MSG_LENGTH_LIMIT = 10;
-    public static final String ANONYMOUS = "anonymous";
-    private static final String MESSAGE_SENT_EVENT = "message_sent";
     private String mUsername;
     private String mPhotoUrl;
-    private SharedPreferences mSharedPreferences;
-    private GoogleApiClient mGoogleApiClient;
-    private static final String MESSAGE_URL = "http://friendlychat.firebase.google.com/message/";
-
     private ImageButton mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
-    private ImageView mAddMessageImageView;
     private TextView textViewOpen;
     private FullStoryDialogFragment fullStoryDialogFragment;
-
-    // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mFirebaseDatabaseReference;
     private ChatAdapter
             mFirebaseAdapter;
-
     private String openingSentance;
     private String friendUserId;
     private Category category;
@@ -150,24 +130,39 @@ public class ChatFragment extends Fragment {
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // New child entries
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseDatabaseReference.child("users").child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        FirebaseUtil.getUserFromFriendInterActiveFriend(mFirebaseUser,friendUserId,new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 InterActiveFriend interActiveFriend = snapshot.getValue(InterActiveFriend.class);
                 if(interActiveFriend != null && !TextUtils.isEmpty(interActiveFriend.lastWord)){
                     textViewOpen.setText("Your line starts with the word " + interActiveFriend.lastWord);
-                     currentCount = interActiveFriend.count;
+                    currentCount = interActiveFriend.count;
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
+//
+//        // New child entries
+//        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+//
+//        mFirebaseDatabaseReference.child("users").child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                InterActiveFriend interActiveFriend = snapshot.getValue(InterActiveFriend.class);
+//                if(interActiveFriend != null && !TextUtils.isEmpty(interActiveFriend.lastWord)){
+//                    textViewOpen.setText("Your line starts with the word " + interActiveFriend.lastWord);
+//                     currentCount = interActiveFriend.count;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         SnapshotParser<FriendlyMessage> parser = new SnapshotParser<FriendlyMessage>() {
             @Override
@@ -185,6 +180,7 @@ public class ChatFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                         .setQuery(messagesRef, parser)
                         .build();
+
         mFirebaseAdapter = new ChatAdapter(options, getActivity(), new ChatAdapter.ChatAdapterListener() {
             @Override
             public void onBindViewHolderStarted() {
@@ -255,18 +251,24 @@ public class ChatFragment extends Fragment {
                         fullStoryDialogFragment = FullStoryDialogFragment.newInstance(fullStory.toString());
                         fullStoryDialogFragment.show(getChildFragmentManager(), null);
 
-                        final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
+
+
+                       // final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
                         String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
 
-                        //update friends turn
-                        InterActiveFriend interActiveFriendFriendTurn = new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword, currentCount+1);
-                        interActiveFriendFriendTurn.setFullStory(fullStory.toString());
-                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(interActiveFriendFriendTurn);
+                        FirebaseUtil.updateFriendTurn(mFirebaseUser,friendUserId,lastword,currentCount,fullStory.toString());
+                        FirebaseUtil.updateMyTurn(mFirebaseUser,friendUserId,lastword,currentCount,fullStory.toString());
 
-                        //update my turn
-                        InterActiveFriend interActiveFriendMyTurn = new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword,currentCount+1);
-                        interActiveFriendMyTurn.setFullStory(fullStory.toString());
-                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(interActiveFriendMyTurn);
+
+//                        //update friends turn
+//                        InterActiveFriend interActiveFriendFriendTurn = new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword, currentCount+1);
+//                        interActiveFriendFriendTurn.setFullStory(fullStory.toString());
+//                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(interActiveFriendFriendTurn);
+//
+//                        //update my turn
+//                        InterActiveFriend interActiveFriendMyTurn = new InterActiveFriend(friendUserId, InterActiveFriend.END_GAME, lastword,currentCount+1);
+//                        interActiveFriendMyTurn.setFullStory(fullStory.toString());
+//                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(interActiveFriendMyTurn);
 
                         isLastTurn = true;
                     }
