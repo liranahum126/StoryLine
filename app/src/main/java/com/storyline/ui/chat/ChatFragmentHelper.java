@@ -6,8 +6,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.storyline.FriendlyMessage;
 import com.storyline.utils.FirebaseUtil;
 
-import static com.storyline.MainActivity.MESSAGES_CHILD;
-
 public class ChatFragmentHelper {
 
     public static String getLastWordFromText(String text){
@@ -33,14 +31,11 @@ public class ChatFragmentHelper {
                     currentCount);
             friendlyMessageOpening.setId(friendUserId);
             FirebaseUtil.pushMessageToChatTable(tableName,friendlyMessageOpening);
-//            mFirebaseDatabaseReference.child(tableName)
-//                    .push().setValue(friendlyMessageOpening);
-           // openingSentance = "";
+
         }
 
         FirebaseUtil.pushMessageToChatTable(tableName,friendlyMessage);
-//        mFirebaseDatabaseReference.child(tableName)
-//                .push().setValue(friendlyMessage);
+
 
     }
 }
