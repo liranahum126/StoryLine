@@ -96,9 +96,9 @@ public class ChatFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
-    private void setFriendUserId(){
+    private void setFriendUserId() {
         friendUserId = MESSAGES_CHILD;
-        friendUserId =  friendUserId.replace(mFirebaseUser.getUid(),"");
+        friendUserId = friendUserId.replace(mFirebaseUser.getUid(), "");
     }
 
     @Nullable
@@ -130,15 +130,16 @@ public class ChatFragment extends Fragment {
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        FirebaseUtil.getUserFromFriendInterActiveFriend(mFirebaseUser,friendUserId,new ValueEventListener() {
+        FirebaseUtil.getUserFromFriendInterActiveFriend(mFirebaseUser, friendUserId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 InterActiveFriend interActiveFriend = snapshot.getValue(InterActiveFriend.class);
-                if(interActiveFriend != null && !TextUtils.isEmpty(interActiveFriend.lastWord)){
+                if (interActiveFriend != null && !TextUtils.isEmpty(interActiveFriend.lastWord)) {
                     textViewOpen.setText("Your line starts with the word " + interActiveFriend.lastWord);
                     currentCount = interActiveFriend.count;
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -175,7 +176,7 @@ public class ChatFragment extends Fragment {
             }
         };
 
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        DatabaseReference messagesRef = FirebaseUtil.getUsersTableDataReference().child(MESSAGES_CHILD);
         FirebaseRecyclerOptions<FriendlyMessage> options =
                 new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                         .setQuery(messagesRef, parser)
@@ -238,27 +239,24 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 boolean isLastTurn = false;
-                    if (mFirebaseAdapter.getItemCount() < STORY_LENGTH - 1) {
-                        ((MainStoriesActivity) getActivity()).moveToSuccessFragment();
-                    } else {
-                        Toast.makeText(getActivity(), "end game", Toast.LENGTH_LONG).show();
-                        StringBuilder fullStory = new StringBuilder();
-                        for(int i = 0; i< mFirebaseAdapter.getItemCount(); ++i){
-                            fullStory.append(mFirebaseAdapter.getItem(i).getText().trim()).append("\n");
-                        }
-                        fullStory.append(mMessageEditText.getText().toString().trim());
-                        Toast.makeText(getActivity(), fullStory.toString(), Toast.LENGTH_LONG).show();
-                        fullStoryDialogFragment = FullStoryDialogFragment.newInstance(fullStory.toString());
-                        fullStoryDialogFragment.show(getChildFragmentManager(), null);
+                if (mFirebaseAdapter.getItemCount() < STORY_LENGTH - 1) {
+                    ((MainStoriesActivity) getActivity()).moveToSuccessFragment();
+                } else {
+                    Toast.makeText(getActivity(), "end game", Toast.LENGTH_LONG).show();
+                    StringBuilder fullStory = new StringBuilder();
+                    for (int i = 0; i < mFirebaseAdapter.getItemCount(); ++i) {
+                        fullStory.append(mFirebaseAdapter.getItem(i).getText().trim()).append("\n");
+                    }
+                    fullStory.append(mMessageEditText.getText().toString().trim());
+                    Toast.makeText(getActivity(), fullStory.toString(), Toast.LENGTH_LONG).show();
+                    fullStoryDialogFragment = FullStoryDialogFragment.newInstance(fullStory.toString());
+                    fullStoryDialogFragment.show(getChildFragmentManager(), null);
 
-
-
-                       // final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
-                        String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
-
-                        FirebaseUtil.updateFriendTurn(mFirebaseUser,friendUserId,lastword,currentCount,fullStory.toString());
-                        FirebaseUtil.updateMyTurn(mFirebaseUser,friendUserId,lastword,currentCount,fullStory.toString());
-
+                    // final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
+                    //  String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
+                    String lastword = ChatFragmentHelper.getLastWordFromText(mMessageEditText.getText().toString());
+                    FirebaseUtil.updateFriendTurn(mFirebaseUser, friendUserId, lastword, currentCount, fullStory.toString(),true);
+                    FirebaseUtil.updateMyTurn(mFirebaseUser, friendUserId, lastword, currentCount, fullStory.toString(),InterActiveFriend.END_GAME,true);
 
 //                        //update friends turn
 //                        InterActiveFriend interActiveFriendFriendTurn = new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword, currentCount+1);
@@ -270,42 +268,54 @@ public class ChatFragment extends Fragment {
 //                        interActiveFriendMyTurn.setFullStory(fullStory.toString());
 //                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(interActiveFriendMyTurn);
 
-                        isLastTurn = true;
-                    }
+                    isLastTurn = true;
+                }
 
-                    FriendlyMessage friendlyMessage = new
-                            FriendlyMessage(mMessageEditText.getText().toString().trim(),
-                            "mUsername",
-                            mPhotoUrl,
-                            null /* no image */,currentCount);
-                    friendlyMessage.setId(mFirebaseUser.getUid());
+//                    FriendlyMessage friendlyMessage = new
+//                            FriendlyMessage(mMessageEditText.getText().toString().trim(),
+//                            "mUsername",
+//                            mPhotoUrl,
+//                            null /* no image */,currentCount);
+//                    friendlyMessage.setId(mFirebaseUser.getUid());
+//
+//                    if (!TextUtils.isEmpty(openingSentance)) {
+//                        FriendlyMessage friendlyMessageOpening = new
+//                                FriendlyMessage(openingSentance,
+//                                "mUsername",
+//                                mPhotoUrl,
+//                                null /* no image */,
+//                                currentCount);
+//                        friendlyMessageOpening.setId(friendUserId);
+//                        mFirebaseDatabaseReference.child(MESSAGES_CHILD)
+//                                .push().setValue(friendlyMessageOpening);
+//                        openingSentance = "";
+//                    }
+//
+//                    mFirebaseDatabaseReference.child(MESSAGES_CHILD)
+//                            .push().setValue(friendlyMessage);
 
-                    if (!TextUtils.isEmpty(openingSentance)) {
-                        FriendlyMessage friendlyMessageOpening = new
-                                FriendlyMessage(openingSentance,
-                                "mUsername",
-                                mPhotoUrl,
-                                null /* no image */,
-                                currentCount);
-                        friendlyMessageOpening.setId(friendUserId);
-                        mFirebaseDatabaseReference.child(MESSAGES_CHILD)
-                                .push().setValue(friendlyMessageOpening);
-                        openingSentance = "";
-                    }
 
-                    mFirebaseDatabaseReference.child(MESSAGES_CHILD)
-                            .push().setValue(friendlyMessage);
+                if (!TextUtils.isEmpty(openingSentance)) {
+                    openingSentance = "";
+                }
 
+                if (!isLastTurn) {
+                  //  final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
+                 //   String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
+                    String lastword = ChatFragmentHelper.getLastWordFromText(mMessageEditText.getText().toString());
 
-                    if (!isLastTurn) {
-                        final DatabaseReference updateTurnsReferance = mFirebaseDatabaseReference.child("users");
-                        String lastword = mMessageEditText.getText().toString().trim().substring(mMessageEditText.getText().toString().lastIndexOf(" ") + 1);
-                        //update friends turn
-                        updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword,currentCount+1));
-                        //update my turn
-                        updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").child(friendUserId).setValue(new InterActiveFriend(friendUserId, InterActiveFriend.MY_TURN, lastword,currentCount+1));
-                        mMessageEditText.setText("");
-                    }
+                    //update friends turn
+                  //  updateTurnsReferance.child(friendUserId).child("interActiveFriendList").child(mFirebaseUser.getUid()).setValue(new InterActiveFriend(mFirebaseUser.getUid(), InterActiveFriend.FRIEND_TURN, lastword, currentCount + 1));
+                    FirebaseUtil.updateFriendTurn(mFirebaseUser,friendUserId,lastword,currentCount,"",false);
+
+                    //update my turn
+//                    updateTurnsReferance.child(mFirebaseUser.getUid()).child("interActiveFriendList").
+//                            child(friendUserId).setValue(new InterActiveFriend(
+//                                    friendUserId, InterActiveFriend.MY_TURN, lastword, currentCount + 1));
+                    FirebaseUtil.updateMyTurn(mFirebaseUser,friendUserId,lastword,currentCount,"",
+                            InterActiveFriend.MY_TURN,false);
+                    mMessageEditText.setText("");
+                }
 //                }else{
 //                    StringBuilder fullStory = new StringBuilder();
 //                    for(int i = 0; i< mFirebaseAdapter.getItemCount() - 1; ++i){
